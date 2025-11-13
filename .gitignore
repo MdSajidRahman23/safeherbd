@@ -1,0 +1,47 @@
+# Laravel Default
+/vendor
+/node_modules
+/public/storage
+/storage/*.key
+.env
+.phpunit.result.cache
+
+# Laravel IDE Helper
+.phpstorm.meta.php
+/_ide_helper.php
+/_ide_helper_models.php
+
+# Laravel Telescope
+/telescope.log
+
+# Laravel Horizon
+/horizon.log
+
+# Log files
+*.log
+
+# OS and Editor Files
+.DS_Store
+Thumbs.db
+*.sublime-project
+*.sublime-workspace
+.vscode/
+
+# Composer
+composer.lock
+
+# NPM
+package-lock.json
+
+# Environment
+.env.backup
+.env.example.backup
+.env.testing
+.env.development
+.env.production
+
+# Vite and build
+/public/build
+/public/hot
+/node_modules
+/resources/**/*.tsbuildinfo
