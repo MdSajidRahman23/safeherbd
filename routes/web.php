@@ -3,6 +3,13 @@
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SafeRouteController;
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/safe-routes', [SafeRouteController::class, 'index'])->name('safe-routes.index');
+    Route::get('/safe-routes/create', [SafeRouteController::class, 'create'])->name('safe-routes.create');
+    Route::post('/safe-routes', [SafeRouteController::class, 'store'])->name('safe-routes.store');
+});
 
 Route::get('/', function () {
     return redirect()->route('login');
