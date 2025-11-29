@@ -23,7 +23,9 @@ Route::get('/dashboard', function () {
 Route::middleware(['auth', 'admin'])->group(function () {
     
     Route::get('/admin/dashboard', function () {
-        return view('dashboard'); 
+        $alerts = App\Models\SOSAlert::with('user')->latest()->get();
+        
+        return view('admin_dashboard', ['alerts' => $alerts]);
     })->name('admin.dashboard');
 
     // SOS Page Show
