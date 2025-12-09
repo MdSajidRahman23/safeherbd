@@ -1,20 +1,21 @@
 <?php
 
 use App\Http\Controllers\Auth\RegisteredUserController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ForumController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
+use App\Models\SOSAlert; // <--- ১. এই লাইনটি আগে ছিল না, তাই সেভ হচ্ছিল না
+use Illuminate\Http\Request;
 
-Route::get('/', function () {
-    return redirect()->route('login');
-});
+/*
+|--------------------------------------------------------------------------
+| Web Routes (Final Setup)
+|--------------------------------------------------------------------------
+*/
 
 Route::get('/', function () {
     return view('welcome');
 });
-
-Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
-Route::post('register', [RegisteredUserController::class, 'store']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -25,6 +26,38 @@ Route::middleware(['auth', 'is_woman'])->group(function () {
 });
 
 
+// Admin & SOS Routes
+Route::middleware(['auth', 'admin'])->group(function () {
+    
+    Route::get('/admin/dashboard', function () {
+        $alerts = App\Models\SOSAlert::with('user')->latest()->get();
+        
+        return view('admin_dashboard', ['alerts' => $alerts]);
+    })->name('admin.dashboard');
+
+    // SOS Page Show
+    Route::get('/safe-routes', function () {
+        return view('sos'); 
+    })->name('safe-routes.index');
+
+    // SOS Data Save (REAL LOGIC)
+    Route::post('/safe-routes/store', function (Request $request) {
+        
+        // ২. ডাটাবেজে সেভ করা হচ্ছে
+        SOSAlert::create([
+            'user_id' => auth()->id(),
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+            'status' => 'pending',
+            'message' => 'Emergency Alert!',
+        ]);
+
+        return response()->json(['success' => true]);
+    
+    })->name('safe-routes.store');
+});
+
+// Profile Routes
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
