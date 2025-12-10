@@ -47,4 +47,14 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function isFemale(): bool
+    {
+        
+        return $this->gender === 'female'; 
+        
+       
+    }
+
+
 }

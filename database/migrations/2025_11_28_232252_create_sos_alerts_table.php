@@ -11,6 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (Schema::hasTable('sos_alerts')) {
+        return;
+    }
+
         Schema::create('sos_alerts', function (Blueprint $table) {
             $table->id();
             // এই লাইনগুলো যোগ করুন
