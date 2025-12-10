@@ -4,14 +4,21 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
-class SOSAlert extends Model
+class SosAlert extends Model
 {
     use HasFactory;
-    
-    // এই লাইনগুলো খুবই জরুরি
+
     protected $table = 'sos_alerts';
-    protected $fillable = ['user_id', 'latitude', 'longitude', 'status', 'message'];
+
+    protected $fillable = [
+        'user_id',
+        'latitude',
+        'longitude',
+        'message',
+        'status',
+    ];
 
     public function user()
     {
