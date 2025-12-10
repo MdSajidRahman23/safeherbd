@@ -10,7 +10,6 @@ use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
-<<<<<<< HEAD
 | Admin Routes (My Main Work)
 |--------------------------------------------------------------------------
 */
@@ -32,9 +31,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 /*
 |--------------------------------------------------------------------------
 | Public & User Routes
-=======
-| Web Routes (Final Setup)
->>>>>>> 54195fc8fc0e0078b24d4161d9e0e322fa93f6da
 |--------------------------------------------------------------------------
 */
 
@@ -43,16 +39,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-<<<<<<< HEAD
-// User Dashboard (Normal Users)
-=======
->>>>>>> 54195fc8fc0e0078b24d4161d9e0e322fa93f6da
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-<<<<<<< HEAD
-=======
 Route::middleware(['auth', 'is_woman'])->group(function () {
     // women-only routes
 });
@@ -89,7 +79,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
     })->name('safe-routes.store');
 });
 
->>>>>>> 54195fc8fc0e0078b24d4161d9e0e322fa93f6da
 // Profile Routes
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
