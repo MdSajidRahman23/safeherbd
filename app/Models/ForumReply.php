@@ -6,33 +6,23 @@ use Illuminate\Database\Eloquent\Model;
 
 class ForumReply extends Model
 {
-<<<<<<< HEAD
-protected $fillable = ['post_id','user_id','reply_text'];
-
-
-public function post(){
-return $this->belongsTo(ForumPost::class, 'post_id');
-}
-
-
-public function user(){
-return $this->belongsTo(User::class);
-}
-}
-=======
     protected $fillable = ['post_id', 'user_id', 'reply_text'];
 
-    // Reply belongs to a user
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    
+    /**
+     * Get the post that this reply belongs to.
+     */
     public function post()
     {
+        // Explicitly define the foreign key 'post_id'
         return $this->belongsTo(ForumPost::class, 'post_id');
     }
-}
 
->>>>>>> b0cb2efddad894b83ece0451a04ec967047a9524
+    /**
+     * Get the user who created the reply.
+     */
+    public function user()
+    {
+        // Laravel assumes 'user_id' as the foreign key
+        return $this->belongsTo(User::class);
+    }
+}

@@ -2,34 +2,27 @@
 
 namespace App\Models;
 
+use App\Models\ForumPost; // Assuming this model exists
 use Illuminate\Database\Eloquent\Model;
 
 class ForumReport extends Model
 {
-<<<<<<< HEAD
-protected $fillable = ['post_id','forumreporter_id','reason','status'];
+    // Keeping the most complete list of fillable attributes
+    protected $fillable = ['post_id', 'forumreporter_id', 'reason', 'status'];
 
-
-public function post(){
-return $this->belongsTo(ForumPost::class, 'post_id');
-}
-
-
-public function forumreporter(){
-return $this->belongsTo(User::class, 'forumreporter_id');
-}
-}
-=======
-    protected $fillable = ['post_id', 'user_id', 'reason'];
-
+    /**
+     * Get the forum post that was reported.
+     */
     public function post()
     {
-        return $this->belongsTo(ForumPost::class);
+        return $this->belongsTo(ForumPost::class, 'post_id');
     }
 
-    public function user()
+    /**
+     * Get the user who filed the report (using the specific 'forumreporter_id' column).
+     */
+    public function forumreporter()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'forumreporter_id');
     }
 }
->>>>>>> b0cb2efddad894b83ece0451a04ec967047a9524
