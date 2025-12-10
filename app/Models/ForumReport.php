@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ForumReport extends Model
 {
+<<<<<<< HEAD
 protected $fillable = ['post_id','forumreporter_id','reason','status'];
 
 
@@ -18,3 +19,17 @@ public function forumreporter(){
 return $this->belongsTo(User::class, 'forumreporter_id');
 }
 }
+=======
+    protected $fillable = ['post_id', 'user_id', 'reason'];
+
+    public function post()
+    {
+        return $this->belongsTo(ForumPost::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+}
+>>>>>>> b0cb2efddad894b83ece0451a04ec967047a9524
