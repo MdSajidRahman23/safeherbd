@@ -8,12 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class ForumPost extends Model
 {
+<<<<<<< HEAD
     // Attributes that are mass assignable
     protected $fillable = ['title', 'body', 'user_id'];
 
     /**
      * Get the user that owns the forum post.
      */
+=======
+    protected $fillable = ['title', 'body', 'user_id'];
+
+>>>>>>> 31412428283c9ee6d9665e14eec9f32776b0261c
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -26,6 +31,7 @@ class ForumPost extends Model
     {
         return $this->hasMany(ForumReply::class, 'post_id');
     }
+<<<<<<< HEAD
 
     /**
      * Get the reports filed against the forum post.
@@ -36,3 +42,11 @@ class ForumPost extends Model
     }
 }
 
+=======
+
+    public function forumreports()
+    {
+        return $this->hasMany(ForumReport::class, 'post_id');
+    }
+}
+>>>>>>> 31412428283c9ee6d9665e14eec9f32776b0261c
