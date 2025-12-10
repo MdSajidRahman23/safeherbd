@@ -83,14 +83,33 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Women-only forum routes
+// forum routes
 Route::middleware(['auth', 'is_woman'])->group(function () {
+// Forum Index
     Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
+
+    // Post Create (GET & POST)
     Route::get('/forum/create', [ForumController::class, 'create'])->name('forum.create');
-    Route::post('/forum/store', [ForumController::class, 'store'])->name('forum.store');
-    Route::get('/forum/{id}', [ForumController::class, 'show'])->name('forum.show');
-    Route::post('/forum/reply/{id}', [ForumController::class, 'storeReply'])->name('forum.reply');
-    Route::post('/forum/report/{id}', [ForumController::class, 'reportPost'])->name('forum.report');
+    Route::post('/forum', [ForumController::class, 'store'])->name('forum.store');
+
+    // Post View
+    Route::get('/forum/{post}', [ForumController::class, 'show'])->name('forum.show');
+
+    // Post Edit & Update (Model binding এর জন্য {post} ব্যবহার করুন)
+    Route::get('/forum/{post}/edit', [ForumController::class, 'edit'])->name('forum.edit');
+    Route::put('/forum/{post}', [ForumController::class, 'update'])->name('forum.update');
+    
+    // Post Delete
+    Route::delete('/forum/{post}', [ForumController::class, 'destroy'])->name('forum.destroy');
+
+    // Post Report
+    Route::post('/forum/{post}/report', [ForumController::class, 'reportPost'])->name('forum.report.store');
+    
+    // Reply Store
+    Route::post('/forum/{post}/reply', [ForumController::class, 'storeReply'])->name('forum.reply.store');
+
+    // Reply Delete
+    Route::delete('/replies/{reply}', [ForumController::class, 'destroyReply'])->name('forum.reply.destroy');
 });
 
 require __DIR__.'/auth.php';
