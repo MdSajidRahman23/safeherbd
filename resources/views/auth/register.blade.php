@@ -38,6 +38,15 @@
                     <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                 </div>
 
+                <div>
+                   <label for="gender">Gender</label>
+                   <select id="gender" name="gender" required class="block mt-1 w-full">
+                   <option value="">Select Gender</option>
+                   <option value="female">Female</option>
+                   <option value="male">Male</option>
+                   </select>
+                </div>
+
                 <div class="flex items-center justify-end mt-4">
                     <x-primary-button class="bg-primary hover:bg-forestgreen text-white">
                         Register
