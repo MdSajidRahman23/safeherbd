@@ -25,12 +25,13 @@ class SosAlertCreated implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new Channel('sos-alerts'),
+            new PrivateChannel('admin.sos-alerts'),
         ];
     }
 
     public function broadcastAs(): string
     {
-        return 'sos.alert.created';
+        return 'sos.created';
     }
 }
+
