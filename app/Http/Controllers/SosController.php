@@ -12,9 +12,9 @@ class SosController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric',
-            'message' => 'nullable|string|max:255',
+            'latitude' => 'required|numeric|between:-90,90',
+            'longitude' => 'required|numeric|between:-180,180',
+            'message' => 'nullable|string|max:500',
         ]);
 
         $alert = SosAlert::create([
@@ -22,12 +22,13 @@ class SosController extends Controller
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,
             'message' => $request->message ?? 'Immediate assistance required.',
-            'status' => 'Open',
+            'status' => 'pending',
         ]);
 
-        broadcast(new SosAlertCreated($alert))->toOthers();
+        event(new SosAlertCreated($alert));
 
         return response()->json([
+            'success' => true,
             'message' => 'SOS Alert sent successfully!',
             'alert_id' => $alert->id
         ], 201);
