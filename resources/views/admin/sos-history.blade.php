@@ -5,37 +5,23 @@
         </h2>
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-8">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <!-- Map Container -->
-            <div class="mb-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">
-                <div id="map" style="height: 500px;" class="rounded-lg"></div>
-            </div>
-
-            <!-- Stats Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
-                    <p class="text-gray-600 dark:text-gray-400 text-sm font-semibold">Total Alerts</p>
-                    <p class="text-3xl font-bold text-gray-900 dark:text-white mt-2">{{ $alerts->total() }}</p>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                <div class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                    <div id="map" style="height: 520px;" class="rounded-lg"></div>
                 </div>
 
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
-                    <p class="text-gray-600 dark:text-gray-400 text-sm font-semibold">Pending</p>
-                    <p class="text-3xl font-bold text-yellow-600 dark:text-yellow-400 mt-2">{{ $alerts->where('status', 'pending')->count() }}</p>
-                </div>
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Total Alerts</p>
+                    <p class="text-3xl font-bold mt-2">{{ $alerts->total() }}</p>
 
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
-                    <p class="text-gray-600 dark:text-gray-400 text-sm font-semibold">Resolved</p>
-                    <p class="text-3xl font-bold text-green-600 dark:text-green-400 mt-2">{{ $alerts->where('status', 'resolved')->count() }}</p>
-                </div>
-
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
-                    <p class="text-gray-600 dark:text-gray-400 text-sm font-semibold">Today</p>
-                    <p class="text-3xl font-bold text-blue-600 dark:text-blue-400 mt-2">{{ $alerts->where('created_at', '>=', now()->startOfDay())->count() }}</p>
+                    <div class="mt-6 space-y-4">
+                        <a href="{{ route('admin.sos-history') }}" class="block text-sm text-blue-600 dark:text-blue-400 hover:underline">View Full List</a>
+                    </div>
                 </div>
             </div>
 
-            <!-- Alerts Table -->
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="w-full">
@@ -54,11 +40,11 @@
                                     <td class="px-6 py-4">
                                         <div class="flex items-center">
                                             <div class="flex-shrink-0 h-10 w-10 bg-red-100 dark:bg-red-900 rounded-full flex items-center justify-center">
-                                                <span class="text-red-600 dark:text-red-400 font-bold">{{ substr($alert->user->name, 0, 1) }}</span>
+                                                <span class="text-red-600 dark:text-red-400 font-bold">{{ optional($alert->user)->name ? substr($alert->user->name, 0, 1) : 'U' }}</span>
                                             </div>
                                             <div class="ml-4">
-                                                <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ $alert->user->name }}</p>
-                                                <p class="text-xs text-gray-500 dark:text-gray-400">{{ $alert->user->email }}</p>
+                                                <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ $alert->user->name ?? 'Unknown' }}</p>
+                                                <p class="text-xs text-gray-500 dark:text-gray-400">{{ $alert->user->email ?? '' }}</p>
                                             </div>
                                         </div>
                                     </td>
@@ -71,18 +57,11 @@
                                     </td>
                                     <td class="px-6 py-4">
                                         <p class="text-sm text-gray-600 dark:text-gray-400 truncate max-w-xs">
-                                            {{ $alert->message ?? 'No message' }}
+                                            {{ \Illuminate\Support\Str::limit($alert->message, 100) }}
                                         </p>
                                     </td>
                                     <td class="px-6 py-4">
-                                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full
-                                            @if($alert->status === 'pending')
-                                                bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200
-                                            @elseif($alert->status === 'resolved')
-                                                bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200
-                                            @else
-                                                bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200
-                                            @endif">
+                                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full {{ $alert->status === 'pending' ? 'bg-yellow-100 text-yellow-800' : ($alert->status === 'resolved' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800') }}">
                                             {{ ucfirst($alert->status) }}
                                         </span>
                                     </td>
@@ -111,69 +90,14 @@
         </div>
     </div>
 
-    <!-- Leaflet CSS -->
+    <!-- Leaflet CSS & JS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
-
-    <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
 
     <script>
-        // Initialize map
-        const map = L.map('map').setView([23.6345, 90.3563], 12); // Centered on Dhaka
-
-        // Add tile layer
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors',
-            maxZoom: 19
-        }).addTo(map);
-
-        // Create marker cluster group
-        const markers = L.markerClusterGroup({
-            maxClusterRadius: 80,
-            disableClusteringAtZoom: 16
-        });
-
-        // Add markers for all alerts
-        const alerts = @json($alerts->items());
-        const sosIcon = L.icon({
-            iconUrl: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="red"><circle cx="12" cy="12" r="12"/><text x="12" y="16" font-size="12" font-weight="bold" text-anchor="middle" fill="white">SOS</text></svg>',
-            iconSize: [32, 32],
-            iconAnchor: [16, 32],
-            popupAnchor: [0, -32]
-        });
-
-        alerts.forEach(alert => {
-            const marker = L.marker([parseFloat(alert.latitude), parseFloat(alert.longitude)], {
-                icon: sosIcon
-            });
-
-            const statusColor = alert.status === 'pending' ? 'text-yellow-600' : alert.status === 'resolved' ? 'text-green-600' : 'text-red-600';
-
-            const popupContent = `
-                <div class="p-3 max-w-xs">
-                    <h3 class="font-bold text-gray-900">${alert.user.name}</h3>
-                    <p class="text-sm text-gray-600 mb-2">${alert.user.email}</p>
-                    <p class="text-sm mb-2"><strong>Status:</strong> <span class="${statusColor}">${alert.status.toUpperCase()}</span></p>
-                    <p class="text-sm"><strong>Time:</strong> ${new Date(alert.created_at).toLocaleString()}</p>
-                    ${alert.message ? `<p class="text-sm mt-2"><strong>Message:</strong> ${alert.message}</p>` : ''}
-                    <a href="https://maps.google.com/?q=${alert.latitude},${alert.longitude}" target="_blank" class="text-blue-600 text-sm mt-2 inline-block hover:underline">
-                        📍 View in Google Maps
-                    </a>
-                </div>
-            `;
-
-            marker.bindPopup(popupContent);
-            markers.addLayer(marker);
-        });
-
-        map.addLayer(markers);
-
-        // Fit map to show all markers
-        if (alerts.length > 0) {
-            map.fitBounds(markers.getBounds().pad(0.1));
-        }
+        window.INITIAL_SOS = @json($alerts->items());
     </script>
+    <script src="/js/admin-sos-map.js" defer></script>
+
 </x-app-layout>

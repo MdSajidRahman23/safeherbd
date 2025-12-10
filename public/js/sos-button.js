@@ -1,3 +1,65 @@
+// SOS button behavior: get geolocation and POST to /sos
+(function () {
+    const btn = document.getElementById('sos-button');
+    if (!btn) return;
+
+    function showToast(msg) {
+        try {
+            alert(msg);
+        } catch (e) {
+            console.log(msg);
+        }
+    }
+
+    btn.addEventListener('click', function () {
+        btn.disabled = true;
+        btn.classList.add('opacity-70');
+
+        if (!navigator.geolocation) {
+            showToast('Geolocation is not supported by your browser');
+            btn.disabled = false;
+            btn.classList.remove('opacity-70');
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(async function (pos) {
+            const lat = pos.coords.latitude;
+            const lon = pos.coords.longitude;
+
+            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            try {
+                const res = await fetch('/sos', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': token,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ latitude: lat, longitude: lon, message: '' })
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    showToast('SOS sent — help is on the way');
+                } else {
+                    const err = await res.json().catch(() => ({}));
+                    showToast('Failed to send SOS: ' + (err.message || res.statusText));
+                }
+            } catch (e) {
+                console.error(e);
+                showToast('Network error while sending SOS');
+            }
+
+            btn.disabled = false;
+            btn.classList.remove('opacity-70');
+        }, function (err) {
+            showToast('Unable to retrieve your location');
+            btn.disabled = false;
+            btn.classList.remove('opacity-70');
+        }, { enableHighAccuracy: true, timeout: 15000 });
+    });
+})();
 /**
  * SOS Button Handler
  * Handles geolocation and sends SOS alert to server

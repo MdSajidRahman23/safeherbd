@@ -8,6 +8,6 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 });
 
 // Admin SOS alerts channel - only admins can subscribe
-Broadcast::channel('admin.sos-alerts', function ($user) {
+Broadcast::channel('private-admin-sos', function ($user) {
     return Auth::check() && ($user->role === 'admin' || $user->is_admin);
 });
