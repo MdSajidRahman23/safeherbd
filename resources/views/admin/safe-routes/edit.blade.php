@@ -137,8 +137,8 @@
                             </div>
                         </div>
                         
-                        <div id="map" class="w-full h-96 lg:h-[500px] rounded-2xl overflow-hidden border border-white/20"></div>
-                        
+                        @include('admin.safe-routes._map')
+
                         <!-- Instructions -->
                         <div class="mt-4 bg-white/5 backdrop-blur-sm rounded-2xl p-4 border border-white/10">
                             <h3 class="text-lg font-semibold text-white mb-2">Instructions</h3>
