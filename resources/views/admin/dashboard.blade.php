@@ -28,12 +28,12 @@
     </div>
 
     <script>
-        // Simple placeholder for live count — will be replaced by Echo in final integration
+       
         document.addEventListener('DOMContentLoaded', function () {
             fetch('{{ route('admin.sos-history') }}')
                 .then(r => r.text())
                 .then(() => {
-                    // placeholder; real-time will update via Echo
+                   
                 });
         });
     </script>
