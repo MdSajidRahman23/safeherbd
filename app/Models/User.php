@@ -23,6 +23,7 @@ class User extends Authenticatable
         'password',
         'phone', 
         'role',
+        'is_admin',
     ];
 
     /**
@@ -45,6 +46,30 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_admin' => 'boolean',
         ];
     }
+
+    public function isFemale(): bool
+    {
+        
+        return $this->gender === 'female'; 
+        
+       
+    }
+
+    /**
+     * Accessor for `is_admin` that respects the `role` fallback.
+     */
+    public function getIsAdminAttribute(): bool
+    {
+        // Prefer the database column when present, otherwise treat role === 'admin' as admin
+        if (array_key_exists('is_admin', $this->attributes)) {
+            return (bool) $this->attributes['is_admin'];
+        }
+
+        return ($this->role === 'admin');
+    }
+
+
 }

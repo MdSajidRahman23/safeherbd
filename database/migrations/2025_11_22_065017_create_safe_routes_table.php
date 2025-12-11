@@ -9,13 +9,13 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-   public function up(): void
+    public function up(): void
 {
     Schema::create('safe_routes', function (Blueprint $table) {
         $table->id();
         $table->string('route_name');
-        $table->json('coordinates'); 
-        
+        $table->longText('coordinates_json');
+
         $table->integer('total_score')->default(0);
         $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
         $table->timestamps();

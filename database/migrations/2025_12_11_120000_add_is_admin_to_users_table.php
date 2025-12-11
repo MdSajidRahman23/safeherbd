@@ -8,16 +8,19 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (!Schema::hasColumn('users', 'role'))
         Schema::table('users', function (Blueprint $table) {
-            $table->string('role')->after('email')->default('user');
+            if (!Schema::hasColumn('users', 'is_admin')) {
+                $table->boolean('is_admin')->default(false)->after('role');
+            }
         });
     }
 
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('role');
+            if (Schema::hasColumn('users', 'is_admin')) {
+                $table->dropColumn('is_admin');
+            }
         });
     }
 };

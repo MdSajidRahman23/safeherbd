@@ -11,15 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (Schema::hasTable('sos_alerts')) {
+            return;
+        }
+
         Schema::create('sos_alerts', function (Blueprint $table) {
             $table->id();
-            // এই লাইনগুলো যোগ করুন
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // কে অ্যালার্ট দিল
-            $table->string('latitude');
-            $table->string('longitude');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->double('latitude');
+            $table->double('longitude');
             $table->string('status')->default('pending');
             $table->text('message')->nullable();
-            
             $table->timestamps();
         });
     }

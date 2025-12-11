@@ -3,9 +3,7 @@
 namespace App\Events;
 
 use App\Models\SosAlert;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -15,7 +13,7 @@ class SosAlertCreated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $alert;
+    public SosAlert $alert;
 
     public function __construct(SosAlert $alert)
     {
@@ -24,13 +22,28 @@ class SosAlertCreated implements ShouldBroadcast
 
     public function broadcastOn(): array
     {
+        return [new PrivateChannel('private-admin-sos')];
+    }
+
+    public function broadcastWith(): array
+    {
         return [
-            new Channel('sos-alerts'),
+            'id' => $this->alert->id,
+            'user' => [
+                'id' => $this->alert->user->id ?? null,
+                'name' => $this->alert->user->name ?? 'Unknown',
+            ],
+            'latitude' => $this->alert->latitude,
+            'longitude' => $this->alert->longitude,
+            'message' => $this->alert->message,
+            'status' => $this->alert->status,
+            'created_at' => optional($this->alert->created_at)->toDateTimeString(),
         ];
     }
 
     public function broadcastAs(): string
     {
-        return 'sos.alert.created';
+        return 'SosAlertCreated';
     }
 }
+

@@ -1,5 +1,87 @@
 <x-app-layout>
     <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            {{ __('Admin Dashboard') }}
+        </h2>
+    </x-slot>
+
+    <div class="py-8">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                    <h3 class="text-sm text-gray-500">Live SOS Count</h3>
+                    <p id="live-sos-count" class="text-3xl font-bold mt-2">0</p>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                    <h3 class="text-sm text-gray-500">Recent Alerts</h3>
+                    <p class="mt-2">Quick access to latest SOS alerts.</p>
+                    <a href="{{ route('admin.sos-history') }}" class="inline-block mt-4 text-sm text-blue-600 hover:underline">View history</a>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                    <h3 class="text-sm text-gray-500">Actions</h3>
+                    <p class="mt-2">Manage active alerts and settings.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple placeholder for live count — will be replaced by Echo in final integration
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('{{ route('admin.sos-history') }}')
+                .then(r => r.text())
+                .then(() => {
+                    // placeholder; real-time will update via Echo
+                });
+        });
+    </script>
+    <!-- Pusher + Echo (CDN) -->
+    <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.11.0/dist/echo.iife.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            try {
+                Pusher.logToConsole = false;
+
+                const echo = new window.Echo({
+                    broadcaster: 'pusher',
+                    key: '{{ env('PUSHER_APP_KEY') }}',
+                    cluster: '{{ env('PUSHER_APP_CLUSTER') }}',
+                    forceTLS: true,
+                    auth: {
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        }
+                    }
+                });
+
+                const liveCounter = document.getElementById('live-sos-count');
+                let count = 0;
+                if (liveCounter) {
+                    // Try to fetch an initial count from the server
+                    fetch('{{ route('admin.sos-history') }}')
+                        .then(r => r.json().catch(() => ({})))
+                        .then(() => {
+                            // No-op placeholder
+                        });
+                }
+
+                echo.private('private-admin-sos')
+                    .listen('SosAlertCreated', (e) => {
+                        count += 1;
+                        if (liveCounter) liveCounter.textContent = count;
+                        alert('New SOS alert from ' + (e.user.name || 'Someone'));
+                    });
+            } catch (e) {
+                console.warn('Realtime init failed', e);
+            }
+        });
+    </script>
+</x-app-layout>
+<x-app-layout>
+    <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
 <<<<<<< HEAD
             {{ __('Admin Dashboard') }}

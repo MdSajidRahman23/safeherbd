@@ -2,49 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\SosAlert;
 use App\Events\SosAlertCreated;
+use App\Models\SosAlert;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Response;
 
 class SosController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function store(Request $request)
     {
-        $request->validate([
-            'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric',
-            'message' => 'nullable|string|max:255',
+        $data = $request->validate([
+            'latitude' => ['required','numeric','between:-90,90'],
+            'longitude' => ['required','numeric','between:-180,180'],
+            'message' => ['nullable','string','max:2000'],
         ]);
 
         $alert = SosAlert::create([
             'user_id' => Auth::id(),
-            'latitude' => $request->latitude,
-            'longitude' => $request->longitude,
-            'message' => $request->message ?? 'Immediate assistance required.',
-            'status' => 'Open',
+            'latitude' => $data['latitude'],
+            'longitude' => $data['longitude'],
+            'message' => $data['message'] ?? null,
+            'status' => 'pending',
         ]);
 
-        broadcast(new SosAlertCreated($alert))->toOthers();
+        // Broadcast event for realtime admin listeners
+        event(new SosAlertCreated($alert));
 
-        return response()->json([
-            'message' => 'SOS Alert sent successfully!',
-            'alert_id' => $alert->id
-        ], 201);
-    }
-    
-    public function index()
-    {
-
-        $alerts = SosAlert::with('user')->latest()->get();
-        return view('admin.dashboard', compact('alerts'));
-    }
-
-    public function close(Request $request, $id)
-    {
-        $alert = SosAlert::findOrFail($id);
-        $alert->update(['status' => 'Closed']);
-
-        return response()->json(['success' => true, 'message' => 'Alert closed successfully']);
+        return response()->json(['success' => true, 'id' => $alert->id], Response::HTTP_CREATED);
     }
 }
+

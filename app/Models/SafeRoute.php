@@ -11,13 +11,13 @@ class SafeRoute extends Model
 
     protected $fillable = [
         'route_name',
-        'coordinates',
+        'coordinates_json',
         'total_score',
         'created_by',
     ];
 
     protected $casts = [
-        'coordinates' => 'array',
+        'coordinates_json' => 'array',
     ];
 
     public function creator()
