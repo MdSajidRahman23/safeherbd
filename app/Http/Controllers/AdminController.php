@@ -21,7 +21,7 @@ class AdminController extends Controller
         return view('admin.dashboard', compact('totalUsers', 'totalRoutes', 'totalSos'));
     }
 
-    // 2. User Management Page (List of Users)
+    
     public function usersIndex()
     {
         $users = User::where('role', 'user')->get();
