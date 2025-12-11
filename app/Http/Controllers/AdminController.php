@@ -32,7 +32,7 @@ class AdminController extends Controller
     public function toggleBlock($id)
     {
         $user = User::findOrFail($id);
-        $user->is_blocked = !$user->is_blocked; // Toggle true/false
+        $user->is_blocked = !$user->is_blocked; 
         $user->save();
 
         return back()->with('success', 'User status updated.');

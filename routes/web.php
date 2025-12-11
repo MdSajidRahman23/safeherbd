@@ -19,7 +19,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-<<<<<<< HEAD
 // forum routes
 Route::middleware(['auth', 'is_woman'])->group(function () {
 // Forum Index
@@ -47,8 +46,7 @@ Route::middleware(['auth', 'is_woman'])->group(function () {
 
     // Reply Delete
     Route::delete('/replies/{reply}', [ForumController::class, 'destroyReply'])->name('forum.reply.destroy');
-=======
-// SOS route for authenticated users
+// SOS route for authenticated users .
 Route::post('/sos', [SosController::class, 'store'])->middleware('auth')->name('sos.store');
 
 // Admin area
@@ -58,7 +56,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     })->name('dashboard');
 
     Route::get('/sos-history', [SosHistoryController::class, 'index'])->name('sos-history');
->>>>>>> 31412428283c9ee6d9665e14eec9f32776b0261c
 });
 
 require __DIR__.'/auth.php';
