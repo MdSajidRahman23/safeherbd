@@ -4,6 +4,11 @@
 
 @section('content')
 <div class="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
+    <!-- Leaflet CSS & JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-o9N1j7kQY1Qm2w6m0h2qk7mFZ6bN6w5g1p2a9u0wKxQ=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-QV3QG6mQe5m1eYw+6oKfX5s5kXq9m3Yk5+6q0G4Y7vM=" crossorigin=""></script>
+    <!-- Safe Route Map JS -->
+    <script src="{{ asset('js/safe-route-map.js') }}" defer></script>
     <div class="container mx-auto px-4 py-8">
         <!-- Header Section -->
         <div class="mb-8">
