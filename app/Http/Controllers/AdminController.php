@@ -28,7 +28,7 @@ class AdminController extends Controller
         return view('admin.users', compact('users'));
     }
 
-    // 3. Block/Unblock Logic
+
     public function toggleBlock($id)
     {
         $user = User::findOrFail($id);
@@ -38,7 +38,7 @@ class AdminController extends Controller
         return back()->with('success', 'User status updated.');
     }
 
-    // 4. Delete User Logic
+    
     public function destroyUser($id)
     {
         User::destroy($id);
