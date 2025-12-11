@@ -15,7 +15,7 @@ class AdminController extends Controller
         $totalUsers = User::where('role', 'user')->count();
         $totalRoutes = SafeRoute::count();
         
-        // Use DB table count to avoid crashes if SosAlert model doesn't exist yet
+        
         $totalSos = DB::table('sos_alerts')->count(); 
 
         return view('admin.dashboard', compact('totalUsers', 'totalRoutes', 'totalSos'));
