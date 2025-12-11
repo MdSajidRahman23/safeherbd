@@ -4,6 +4,8 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SosController;
 use App\Http\Controllers\Admin\SosHistoryController;
+use App\Http\Controllers\ForumController;
+use App\Http\Controllers\Admin\SafeRouteController;
 
 Route::get('/', function () {
     return view('welcome');
