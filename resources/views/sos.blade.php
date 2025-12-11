@@ -45,7 +45,7 @@
             status.className = "mt-6 text-lg font-bold text-yellow-600";
 
             // AJAX Request to Server
-            fetch("{{ route('safe-routes.store') }}", {
+            fetch("{{ route('sos.store') }}", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

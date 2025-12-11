@@ -3,8 +3,93 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>SafeHer Bangladesh - Women Safety Platform</title>
+        <link rel="preconnect" href="https://fonts.bunny.net">
+        <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
+        @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
+            @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @else
+            <style>
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; }
+                .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+                header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px 0; }
+                nav { display: flex; justify-content: space-between; align-items: center; }
+                nav a { color: white; text-decoration: none; margin-left: 30px; }
+                .hero { text-align: center; padding: 100px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+                .hero h1 { font-size: 3.5rem; margin-bottom: 20px; font-weight: bold; }
+                .hero p { font-size: 1.3rem; margin-bottom: 30px; }
+                .btn { display: inline-block; padding: 12px 30px; background: white; color: #667eea; text-decoration: none; border-radius: 5px; font-weight: bold; margin-right: 10px; }
+                .btn:hover { background: #f0f0f0; }
+                .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; padding: 60px 20px; }
+                .feature { text-align: center; padding: 20px; }
+                .feature h3 { font-size: 1.5rem; margin-bottom: 10px; color: #667eea; }
+                footer { background: #333; color: white; text-align: center; padding: 20px; }
+            </style>
+        @endif
+    </head>
+    <body>
+        <header>
+            <div class="container">
+                <nav>
+                    <h1 style="margin: 0;">SafeHer Bangladesh</h1>
+                    <div>
+                        @auth
+                            <a href="{{ url('/dashboard') }}">Dashboard</a>
+                            <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">@csrf</form>
+                        @else
+                            <a href="{{ route('login') }}">Login</a>
+                            <a href="{{ route('register') }}">Register</a>
+                        @endauth
+                    </div>
+                </nav>
+            </div>
+        </header>
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <section class="hero">
+            <h1>Women Safety Platform</h1>
+            <p>An AI-driven platform for women's safety, mental health support, and community empowerment in Bangladesh</p>
+            @guest
+                <a href="{{ route('register') }}" class="btn">Get Started</a>
+                <a href="{{ route('login') }}" class="btn" style="background: transparent; border: 2px solid white; color: white;">Sign In</a>
+            @endguest
+        </section>
+
+        <section class="features">
+            <div class="feature">
+                <h3>🆘 Emergency SOS</h3>
+                <p>Send instant SOS alerts with your live location to nearby verified contacts and administrators.</p>
+            </div>
+            <div class="feature">
+                <h3>🗺️ Safe Routes</h3>
+                <p>View and share safe routes with crime point ratings and community-verified information.</p>
+            </div>
+            <div class="feature">
+                <h3>💬 Community Forum</h3>
+                <p>Connect with other women, share experiences, and get support from a safe community space.</p>
+            </div>
+            <div class="feature">
+                <h3>🤖 AI Chatbot</h3>
+                <p>24/7 mental health support chatbot offering guidance and resources for women in need.</p>
+            </div>
+            <div class="feature">
+                <h3>📊 Safety Analytics</h3>
+                <p>Track city-wide safety trends and access data-driven insights about your area.</p>
+            </div>
+            <div class="feature">
+                <h3>🛡️ Women-Only Spaces</h3>
+                <p>Secure forums and chat spaces designed exclusively for women's safety and privacy.</p>
+            </div>
+        </section>
+
+        <footer>
+            <div class="container">
+                <p>&copy; 2025 SafeHer Bangladesh. Empowering women through technology and community.</p>
+            </div>
+        </footer>
+    </body>
+</html>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">

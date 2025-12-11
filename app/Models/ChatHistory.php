@@ -5,14 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SosAlert extends Model
+class ChatHistory extends Model
 {
     use HasFactory;
-    
-    // এই লাইনগুলো খুবই জরুরি
-    protected $table = 'sos_alerts';
-    protected $fillable = ['user_id', 'latitude', 'longitude', 'status', 'message'];
 
+    protected $fillable = [
+        'user_id',
+        'message',
+        'bot_reply',
+        'session_id',
+    ];
+
+    /**
+     * Get the user that owns this chat history.
+     */
     public function user()
     {
         return $this->belongsTo(User::class);

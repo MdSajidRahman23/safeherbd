@@ -1,55 +1,71 @@
-@extends('layouts.app')
-
-@section('content')
-<div class="container mx-auto p-6 max-w-4xl">
-    <div class="flex justify-between items-center mb-6">
-        <h2 class="text-3xl font-bold text-pink-700">🌺 Women-Only Forum 🌺</h2>
-        <a href="{{ route('forum.create') }}" class="bg-pink-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-pink-700 transition duration-150 shadow-md">
-            <i class="fas fa-plus-circle"></i> Create New Post
-        </a>
-    </div>
-
-    @if(session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 p-3 mb-4 rounded-lg" role="alert">
-            {{ session('success') }}
+<x-app-layout>
+    <x-slot name="header">
+        <div class="flex items-center justify-between">
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                {{ __('Women-Only Forum') }}
+            </h2>
+            <a href="{{ route('forum.create') }}" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition">
+                {{ __('Create Post') }}
+            </a>
         </div>
-    @endif
-    
-    <div class="space-y-4">
-        @forelse($posts as $post)
-            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 border border-gray-100">
-                <h3 class="text-xl font-extrabold mb-1">
-                    <a href="{{ route('forum.show', $post) }}" class="text-gray-800 hover:text-pink-600 transition duration-150">
-                        {{ $post->title }}
-                    </a>
-                </h3>
-                
-                <p class="text-gray-500 text-sm mt-1">
-                    Posted by: **{{ $post->user->name }}** • 
-                    Time: {{ $post->created_at->diffForHumans() }}
-                </p>
-                
-                <p class="mt-3 text-gray-700 leading-relaxed">
-                    {{ Str::limit($post->body, 150) }}
-                </p>
-                
-                <div class="mt-3 pt-2 border-t border-gray-100 flex justify-end">
-                    <span class="text-pink-600 font-semibold text-sm">
-                         💬 Replies: {{ $post->replies->count() }}
-                    </span>
-                </div>
-            </div>
-        @empty
-            <div class="bg-yellow-50 border border-yellow-300 text-yellow-800 p-6 rounded-lg text-center shadow-lg">
-                <p class="font-bold mb-2">No posts found in this forum.</p>
-                <p>Be the first to create a discussion!</p>
-            </div>
-        @endforelse
-    </div>
+    </x-slot>
 
-    {{-- Pagination Link --}}
-    <div class="mt-8">
-        {{ $posts->links() }}
+    <div class="py-12">
+        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
+            @if(session('success'))
+                <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            <div class="space-y-4">
+                @forelse($posts as $post)
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-lg transition-shadow p-6">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <h3 class="text-lg font-bold mb-1">
+                                    <a href="{{ route('forum.show', $post) }}" class="text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition">
+                                        {{ $post->title }}
+                                    </a>
+                                </h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">
+                                    By <strong>{{ $post->user->name }}</strong> • {{ $post->created_at->diffForHumans() }}
+                                </p>
+                            </div>
+                            @if(Auth::id() === $post->user_id)
+                                <div class="flex gap-2">
+                                    <a href="{{ route('forum.edit', $post) }}" class="text-blue-600 hover:text-blue-800 text-sm">Edit</a>
+                                    <form action="{{ route('forum.destroy', $post) }}" method="POST" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" onclick="return confirm('Are you sure?')" class="text-red-600 hover:text-red-800 text-sm">Delete</button>
+                                    </form>
+                                </div>
+                            @endif
+                        </div>
+
+                        <p class="text-gray-700 dark:text-gray-300 mb-3 line-clamp-2">{{ $post->body }}</p>
+
+                        <div class="flex justify-between items-center pt-3 border-t border-gray-200 dark:border-gray-700">
+                            <span class="text-sm text-gray-500 dark:text-gray-400">
+                                💬 {{ $post->replies->count() }} {{ __('Replies') }}
+                            </span>
+                            <a href="{{ route('forum.show', $post) }}" class="text-blue-600 hover:text-blue-800 text-sm font-semibold">
+                                {{ __('View Discussion') }} →
+                            </a>
+                        </div>
+                    </div>
+                @empty
+                    <div class="bg-yellow-50 dark:bg-yellow-900 border border-yellow-300 dark:border-yellow-700 rounded-lg p-8 text-center">
+                        <p class="text-yellow-800 dark:text-yellow-200 font-semibold mb-2">No posts yet</p>
+                        <p class="text-yellow-700 dark:text-yellow-300 text-sm">Be the first to start a discussion!</p>
+                    </div>
+                @endforelse
+            </div>
+
+            <div class="mt-8">
+                {{ $posts->links() }}
+            </div>
+        </div>
     </div>
-</div>
-@endsection
+</x-app-layout>

@@ -1,68 +1,79 @@
-@extends('layouts.app') 
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            {{ __('Create New Discussion') }}
+        </h2>
+    </x-slot>
 
-@section('content')
-<div class="container mx-auto p-6 max-w-2xl">
-    <h2 class="text-3xl font-bold mb-6 text-center text-pink-700">📝 Create New Post</h2>
+    <div class="py-12">
+        <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                @if($errors->any())
+                    <div class="mb-4 bg-red-100 dark:bg-red-900 border border-red-400 dark:border-red-700 text-red-700 dark:text-red-200 px-4 py-3 rounded-lg">
+                        <strong>{{ __('Validation Error:') }}</strong>
+                        <ul class="mt-2 list-disc list-inside">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
-    {{-- Validation Errors Display --}}
-    @if ($errors->any())
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-            <strong class="font-bold">Error:</strong>
-            <ul class="mt-2 list-disc list-inside">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
+                <form action="{{ route('forum.store') }}" method="POST" class="space-y-6">
+                    @csrf
+
+                    <!-- Title Input -->
+                    <div>
+                        <label for="title" class="block font-semibold mb-2 text-gray-900 dark:text-white">
+                            {{ __('Post Title') }}
+                        </label>
+                        <input 
+                            type="text" 
+                            id="title" 
+                            name="title" 
+                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white @error('title') border-red-500 @enderror" 
+                            value="{{ old('title') }}" 
+                            required 
+                            maxlength="255"
+                            placeholder="Enter a clear and descriptive title"
+                        >
+                        @error('title')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Body Content Input -->
+                    <div>
+                        <label for="body" class="block font-semibold mb-2 text-gray-900 dark:text-white">
+                            {{ __('Description') }}
+                        </label>
+                        <textarea 
+                            id="body" 
+                            name="body" 
+                            rows="8" 
+                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white @error('body') border-red-500 @enderror" 
+                            required 
+                            placeholder="Share your thoughts, questions, or experiences in detail..."
+                        >{{ old('body') }}</textarea>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">
+                            {{ __('Please use respectful language. Harmful content may be automatically filtered.') }}
+                        </p>
+                        @error('body')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="flex justify-end gap-3 pt-4">
+                        <a href="{{ route('forum.index') }}" class="px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                            {{ __('Cancel') }}
+                        </a>
+                        <button type="submit" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition">
+                            {{ __('Post Discussion') }}
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-    @endif
-
-    <form action="{{ route('forum.store') }}" method="POST" class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
-        @csrf
-
-        {{-- Title Input --}}
-        <div class="mb-4">
-            <label for="title" class="block font-semibold mb-2 text-gray-700">Post Title:</label>
-            <input 
-                type="text" 
-                id="title" 
-                name="title" 
-                class="w-full border-gray-300 border p-3 rounded-lg focus:border-pink-500 focus:ring-1 focus:ring-pink-500 @error('title') border-red-500 @enderror" 
-                value="{{ old('title') }}" 
-                required 
-                maxlength="255"
-                placeholder="Enter a brief and engaging title"
-            >
-             @error('title')
-                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-            @enderror
-        </div>
-
-        {{-- Body Content Input --}}
-        <div class="mb-6">
-            <label for="body" class="block font-semibold mb-2 text-gray-700">Post Body:</label>
-            <textarea 
-                id="body" 
-                name="body" 
-                rows="8" 
-                class="w-full border-gray-300 border p-3 rounded-lg focus:border-pink-500 focus:ring-1 focus:ring-pink-500 @error('body') border-red-500 @enderror" 
-                required 
-                placeholder="Write your discussion or question in detail here..."
-            >{{ old('body') }}</textarea>
-            <small class="text-gray-500 text-sm mt-1 block">Please use respectful language. Offensive content may be automatically filtered.</small>
-            @error('body')
-                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-            @enderror
-        </div>
-
-        {{-- Buttons --}}
-        <div class="flex justify-end gap-3">
-            <a href="{{ route('forum.index') }}" class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition duration-150">
-                Cancel
-            </a>
-            <button type="submit" class="bg-pink-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-pink-700 transition duration-150 shadow-md">
-                Post Discussion
-            </button>
-        </div>
-    </form>
-</div>
-@endsection
+    </div>
+</x-app-layout>

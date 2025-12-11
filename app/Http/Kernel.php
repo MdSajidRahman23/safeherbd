@@ -53,6 +53,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'role.redirect' => \App\Http\Middleware\RedirectIfRole::class,
-        'admin' => \App\Http\Middleware\AdminMiddleware::class, 
+        'admin' => \App\Http\Middleware\AdminMiddleware::class,
+        'is_woman' => \App\Http\Middleware\EnsureUserIsWoman::class,
     ];
 }

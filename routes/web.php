@@ -6,6 +6,9 @@ use App\Http\Controllers\SosController;
 use App\Http\Controllers\Admin\SosHistoryController;
 use App\Http\Controllers\ForumController;
 use App\Http\Controllers\Admin\SafeRouteController;
+use App\Http\Controllers\ChatbotController;
+use App\Http\Controllers\RouteController;
+use App\Http\Controllers\AdminController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -21,47 +24,60 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// forum routes
+// Forum routes - Women only
 Route::middleware(['auth', 'is_woman'])->group(function () {
-// Forum Index
     Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
-
-   
     Route::get('/forum/create', [ForumController::class, 'create'])->name('forum.create');
     Route::post('/forum', [ForumController::class, 'store'])->name('forum.store');
-
-    // Post View
     Route::get('/forum/{post}', [ForumController::class, 'show'])->name('forum.show');
-
-    // Post Edit & Update (Model binding এর জন্য {post} ব্যবহার করুন)
     Route::get('/forum/{post}/edit', [ForumController::class, 'edit'])->name('forum.edit');
     Route::put('/forum/{post}', [ForumController::class, 'update'])->name('forum.update');
-    
-    // Post Delete
     Route::delete('/forum/{post}', [ForumController::class, 'destroy'])->name('forum.destroy');
-
-    // Post Report
     Route::post('/forum/{post}/report', [ForumController::class, 'reportPost'])->name('forum.report.store');
-    
-    // Reply Store
     Route::post('/forum/{post}/reply', [ForumController::class, 'storeReply'])->name('forum.reply.store');
-
-    // Reply Delete
     Route::delete('/replies/{reply}', [ForumController::class, 'destroyReply'])->name('forum.reply.destroy');
-
-    // end forum middleware group
 });
 
-// SOS route for authenticated users .
+// Chatbot routes - Authenticated users
+Route::middleware('auth')->prefix('chatbot')->name('chatbot.')->group(function () {
+    Route::get('/', [ChatbotController::class, 'index'])->name('index');
+    Route::post('/send-message', [ChatbotController::class, 'sendMessage'])->name('send-message');
+    Route::get('/history', [ChatbotController::class, 'getHistory'])->name('history');
+    Route::post('/clear-history', [ChatbotController::class, 'clearHistory'])->name('clear-history');
+});
+
+// Safe Routes - Public view, admin management
+Route::middleware('auth')->prefix('safe-routes')->name('safe-routes.')->group(function () {
+    Route::get('/', [RouteController::class, 'index'])->name('index');
+    Route::post('/report', [RouteController::class, 'reportUnsafeSpot'])->name('report');
+});
+
+// SOS route for authenticated users
 Route::post('/sos', [SosController::class, 'store'])->middleware('auth')->name('sos.store');
 
 // Admin area
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
 
     Route::get('/sos-history', [SosHistoryController::class, 'index'])->name('sos-history');
+    Route::post('/alerts/{id}/update-status', function ($id) {
+        $alert = \App\Models\SosAlert::find($id);
+        if ($alert && request('status')) {
+            $alert->update(['status' => request('status')]);
+            return response()->json(['success' => true]);
+        }
+        return response()->json(['success' => false], 404);
+    })->name('alerts.update-status');
+
+    // Safe Routes Management
+    Route::prefix('safe-routes')->name('safe-routes.')->group(function () {
+        Route::get('/', [SafeRouteController::class, 'index'])->name('index');
+        Route::get('/create', [SafeRouteController::class, 'create'])->name('create');
+        Route::post('/', [SafeRouteController::class, 'store'])->name('store');
+        Route::get('/{safeRoute}/edit', [SafeRouteController::class, 'edit'])->name('edit');
+        Route::put('/{safeRoute}', [SafeRouteController::class, 'update'])->name('update');
+        Route::delete('/{safeRoute}', [SafeRouteController::class, 'destroy'])->name('destroy');
+    });
 });
 
 require __DIR__.'/auth.php';

@@ -11,14 +11,6 @@ use Illuminate\Support\Facades\Gate; // অথরাইজেশন চেকে
 
 class ForumController extends Controller
 {
-    /**
-     * Women-Only Access এবং Authentication নিশ্চিত করতে মিডলওয়্যার
-     */
-    public function __construct()
-    {
-        // নিশ্চিত করে যে ইউজার লগইন করা এবং is.female মিডলওয়্যার দ্বারা অনুমোদিত
-        $this->middleware(['auth', 'is.female']);
-    }
 
     // 1. Forum Home Page → List of Posts
     public function index()
