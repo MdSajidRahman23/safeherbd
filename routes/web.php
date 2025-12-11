@@ -24,7 +24,7 @@ Route::middleware(['auth', 'is_woman'])->group(function () {
 // Forum Index
     Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
 
-    // Post Create (GET & POST)
+   
     Route::get('/forum/create', [ForumController::class, 'create'])->name('forum.create');
     Route::post('/forum', [ForumController::class, 'store'])->name('forum.store');
 
