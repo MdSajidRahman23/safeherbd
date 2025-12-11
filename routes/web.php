@@ -55,6 +55,9 @@ Route::middleware('auth')->prefix('safe-routes')->name('safe-routes.')->group(fu
 // SOS route for authenticated users
 Route::post('/sos', [SosController::class, 'store'])->middleware('auth')->name('sos.store');
 
+// User SOS History
+Route::get('/my-sos-history', [SosController::class, 'history'])->middleware('auth')->name('my-sos-history');
+
 // Admin area
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');

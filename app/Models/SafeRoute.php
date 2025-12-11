@@ -13,6 +13,9 @@ class SafeRoute extends Model
         'route_name',
         'coordinates_json',
         'total_score',
+        'theft_count',
+        'robbery_count',
+        'kidnapping_count',
         'created_by',
     ];
 

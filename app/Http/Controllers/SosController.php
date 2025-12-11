@@ -36,5 +36,17 @@ class SosController extends Controller
 
         return response()->json(['success' => true, 'id' => $alert->id], Response::HTTP_CREATED);
     }
+
+    /**
+     * Show user's SOS history
+     */
+    public function history()
+    {
+        $alerts = SosAlert::where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        return view('sos-history', compact('alerts'));
+    }
 }
 

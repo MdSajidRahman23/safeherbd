@@ -50,5 +50,10 @@ class DatabaseSeeder extends Seeder
             'role' => 'user',
             'is_admin' => false,
         ]);
+
+        // Seed safe routes
+        $this->call([
+            SafeRouteSeeder::class,
+        ]);
     }
 }
