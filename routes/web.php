@@ -46,6 +46,10 @@ Route::middleware(['auth', 'is_woman'])->group(function () {
 
     // Reply Delete
     Route::delete('/replies/{reply}', [ForumController::class, 'destroyReply'])->name('forum.reply.destroy');
+
+    // end forum middleware group
+});
+
 // SOS route for authenticated users .
 Route::post('/sos', [SosController::class, 'store'])->middleware('auth')->name('sos.store');
 
