@@ -94,26 +94,7 @@
             <!-- Map Section -->
             <div class="bg-white/10 backdrop-blur-lg rounded-3xl border border-white/20 p-6 shadow-2xl">
                 <h2 class="text-2xl font-bold text-white mb-6">Routes Map</h2>
-                <div id="map" class="w-full h-96 rounded-2xl overflow-hidden border border-white/20"></div>
-                
-                <!-- Legend -->
-                <div class="mt-4 bg-white/5 backdrop-blur-sm rounded-2xl p-4 border border-white/10">
-                    <h3 class="text-lg font-semibold text-white mb-3">Safety Legend</h3>
-                    <div class="flex flex-wrap gap-4">
-                        <div class="flex items-center space-x-2">
-                            <div class="w-4 h-4 bg-emerald-500 rounded-full"></div>
-                            <span class="text-emerald-300 text-sm">Safe (< 5)</span>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <div class="w-4 h-4 bg-yellow-500 rounded-full"></div>
-                            <span class="text-yellow-300 text-sm">Moderate (5-10)</span>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <div class="w-4 h-4 bg-red-500 rounded-full"></div>
-                            <span class="text-red-300 text-sm">Dangerous (> 10)</span>
-                        </div>
-                    </div>
-                </div>
+                @include('admin.safe-routes._map')
             </div>
         </div>
     </div>
