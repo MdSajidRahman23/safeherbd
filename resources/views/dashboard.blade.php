@@ -1,19 +1,13 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot>
+@extends('layouts.app')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <!-- Welcome Message -->
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mb-6">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <h3 class="text-lg font-semibold mb-2">{{ __('Welcome back, ') . Auth::user()->name }}!</h3>
-                    <p class="text-gray-600 dark:text-gray-400">{{ __('Access all your safety features from here.') }}</p>
-                </div>
-            </div>
+@section('content')
+<div class="py-12">
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <h1>Test Dashboard</h1>
+        <p>Basic dashboard content</p>
+    </div>
+</div>
+@endsection
 
             <!-- Emergency SOS Section -->
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mb-6">
@@ -41,7 +35,7 @@
             <!-- Features Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Forum Card (Women Only) -->
-                @if(Auth::user()->isFemale())
+                @if(Auth::check() && Auth::user()->isFemale())
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6">
                         <div class="flex items-center mb-4">
@@ -97,7 +91,7 @@
                 </div>
 
                 <!-- Admin Dashboard Card (Admin Only) -->
-                @if(Auth::user()->is_admin)
+                @if(Auth::check() && Auth::user()->is_admin)
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg md:col-span-2 lg:col-span-3">
                     <div class="p-6">
                         <div class="flex items-center mb-4">
@@ -126,7 +120,7 @@
             </div>
 
             <!-- Quick Stats (if available) -->
-            @if(Auth::user()->is_admin)
+            @if(Auth::check() && Auth::user()->is_admin)
             <div class="mt-6 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6">
                     <h4 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">{{ __('Quick Stats') }}</h4>

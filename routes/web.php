@@ -14,9 +14,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/test-dashboard', function () {
+    return '<h1>Test Dashboard</h1><p>If you can see this, the basic routing works.</p>';
+})->name('test-dashboard');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
