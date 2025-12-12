@@ -1,3 +1,4 @@
+
 <?php
 
 use Illuminate\Database\Migrations\Migration;
@@ -21,6 +22,7 @@ return new class extends Migration
                   ->constrained();  // No cascade so reports remain for review
 
             $table->string('reason')->nullable();
+            $table->enum('status', ['pending', 'reviewed', 'resolved'])->default('pending');
 
             $table->timestamps();
         });

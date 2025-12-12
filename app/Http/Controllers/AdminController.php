@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\SafeRoute; // Assuming Zahin has this model
+use App\Models\SafeRoute;
+use App\Models\ForumReport;
 use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
@@ -35,14 +36,24 @@ class AdminController extends Controller
         return view('admin.users', compact('users'));
     }
 
-
-    public function toggleBlock($id)
+    // Block user
+    public function blockUser($id)
     {
         $user = User::findOrFail($id);
-        $user->is_blocked = !$user->is_blocked; 
+        $user->is_blocked = true; 
         $user->save();
 
-        return back()->with('success', 'User status updated.');
+        return back()->with('success', 'User blocked successfully.');
+    }
+
+    // Unblock user
+    public function unblockUser($id)
+    {
+        $user = User::findOrFail($id);
+        $user->is_blocked = false; 
+        $user->save();
+
+        return back()->with('success', 'User unblocked successfully.');
     }
 
     
@@ -50,5 +61,43 @@ class AdminController extends Controller
     {
         User::destroy($id);
         return back()->with('success', 'User deleted successfully.');
+    }
+
+    // Safe Routes Management
+    public function safeRoutesIndex()
+    {
+        $safeRoutes = SafeRoute::with('creator')->latest()->get();
+        return view('admin.safe-routes', compact('safeRoutes'));
+    }
+
+    // Reports Management
+    public function reportsIndex()
+    {
+        $reports = ForumReport::with(['post', 'reporter'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+        
+        return view('admin.reports', compact('reports'));
+    }
+
+    // Update report status
+    public function updateReportStatus(Request $request, $id)
+    {
+        $report = ForumReport::findOrFail($id);
+        
+        $request->validate([
+            'status' => 'required|in:pending,reviewed,resolved'
+        ]);
+
+        $report->update(['status' => $request->status]);
+        
+        return response()->json(['success' => true]);
+    }
+
+    // Delete report
+    public function destroyReport($id)
+    {
+        ForumReport::destroy($id);
+        return response()->json(['success' => true]);
     }
 }

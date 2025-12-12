@@ -59,9 +59,21 @@ Route::post('/sos', [SosController::class, 'store'])->middleware('auth')->name('
 Route::get('/my-sos-history', [SosController::class, 'history'])->middleware('auth')->name('my-sos-history');
 
 // Admin area
+
+
+
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
 
+    // Users Management
+    Route::prefix('users')->name('users.')->group(function () {
+        Route::get('/', [AdminController::class, 'usersIndex'])->name('index');
+        Route::post('/{id}/block', [AdminController::class, 'blockUser'])->name('block');
+        Route::post('/{id}/unblock', [AdminController::class, 'unblockUser'])->name('unblock');
+        Route::delete('/{id}', [AdminController::class, 'destroyUser'])->name('destroy');
+    });
+
+    // SOS History
     Route::get('/sos-history', [SosHistoryController::class, 'index'])->name('sos-history');
     Route::post('/alerts/{id}/update-status', function ($id) {
         $alert = \App\Models\SosAlert::find($id);
@@ -72,14 +84,21 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         return response()->json(['success' => false], 404);
     })->name('alerts.update-status');
 
-    // Safe Routes Management
+    // Safe Routes Management (Alternative AdminController method)
     Route::prefix('safe-routes')->name('safe-routes.')->group(function () {
-        Route::get('/', [SafeRouteController::class, 'index'])->name('index');
+        Route::get('/', [AdminController::class, 'safeRoutesIndex'])->name('index');
         Route::get('/create', [SafeRouteController::class, 'create'])->name('create');
         Route::post('/', [SafeRouteController::class, 'store'])->name('store');
         Route::get('/{safeRoute}/edit', [SafeRouteController::class, 'edit'])->name('edit');
         Route::put('/{safeRoute}', [SafeRouteController::class, 'update'])->name('update');
         Route::delete('/{safeRoute}', [SafeRouteController::class, 'destroy'])->name('destroy');
+    });
+
+    // Reports Management
+    Route::prefix('reports')->name('reports.')->group(function () {
+        Route::get('/', [AdminController::class, 'reportsIndex'])->name('index');
+        Route::post('/{id}/update-status', [AdminController::class, 'updateReportStatus'])->name('update-status');
+        Route::delete('/{id}', [AdminController::class, 'destroyReport'])->name('destroy');
     });
 });
 

@@ -9,6 +9,7 @@ class SafeRoute extends Model
 {
     use HasFactory;
 
+
     protected $fillable = [
         'route_name',
         'coordinates_json',
@@ -16,6 +17,7 @@ class SafeRoute extends Model
         'theft_count',
         'robbery_count',
         'kidnapping_count',
+        'is_active',
         'created_by',
     ];
 

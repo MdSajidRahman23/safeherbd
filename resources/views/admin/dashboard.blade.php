@@ -74,17 +74,18 @@
                     @endif
                 </div>
             </div>
+
             <!-- Quick Actions -->
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
                 <h3 class="text-lg font-bold mb-4 dark:text-gray-200">Quick Actions</h3>
                 <div class="flex gap-4 flex-wrap">
-                    <a href="#" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded">
+                    <a href="{{ route('admin.users.index') }}" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded">
                         Manage Users
                     </a>
-                    <a href="#" class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded">
+                    <a href="{{ route('admin.safe-routes.index') }}" class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded">
                         Manage Routes
                     </a>
-                    <a href="#" class="px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded">
+                    <a href="{{ route('admin.reports.index') }}" class="px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded">
                         Review Reports
                     </a>
                 </div>
