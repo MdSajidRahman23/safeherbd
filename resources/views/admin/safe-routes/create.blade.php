@@ -2,13 +2,12 @@
 
 @section('title', 'Create Safe Route')
 
+@push('styles')
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+@endpush
+
 @section('content')
 <div class="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
-    @push('leaflet')
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-o9N1j7kQY1Qm2w6m0h2qk7mFZ6bN6w5g1p2a9u0wKxQ=" crossorigin="" />
-        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-QV3QG6mQe5m1eYw+6oKfX5s5kXq9m3Yk5+6q0G4Y7vM=" crossorigin=""></script>
-        <script src="{{ asset('js/safe-route-map.js') }}" defer></script>
-    @endpush
     <div class="container mx-auto px-4 py-8">
         <!-- Header Section -->
         <div class="mb-8">
@@ -83,7 +82,7 @@
                             </div>
 
                             <!-- Coordinates JSON (Hidden) -->
-                            <input type="hidden" id="coordinates_json" name="coordinates_json" value="">
+                            <input type="hidden" id="coordinates_json" name="coordinates" value="">
                             
                             <!-- Crime Type Selector -->
                             <div>
@@ -125,7 +124,7 @@
                             <div class="flex space-x-2">
                                 <button type="button" 
                                         id="toggleRouteMode"
-                                        class="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 rounded-xl transition-all duration-300">
+                                        class="px-4 py-2 bg-blue-500/30 text-blue-300 rounded-xl transition-all duration-300">
                                     Route Mode
                                 </button>
                                 <button type="button" 
@@ -136,7 +135,30 @@
                             </div>
                         </div>
                         
-                        @include('admin.safe-routes._map')
+                        <!-- Map Container -->
+                        <div class="relative">
+                            <div id="map" class="w-full h-96 lg:h-[500px] rounded-2xl overflow-hidden border border-white/20"></div>
+                            
+                            <!-- Legend -->
+                            <div class="absolute bottom-4 left-4 bg-white/10 backdrop-blur-md rounded-lg p-3 text-sm text-white border border-white/20 shadow-lg">
+                                <div class="flex items-center space-x-3">
+                                    <span class="w-3 h-3 rounded-full" style="background:#3B82F6"></span>
+                                    <span>Route Path</span>
+                                </div>
+                                <div class="flex items-center space-x-3 mt-2">
+                                    <span class="w-3 h-3 rounded-full" style="background:#10B981"></span>
+                                    <span>Theft (Score: 1)</span>
+                                </div>
+                                <div class="flex items-center space-x-3 mt-2">
+                                    <span class="w-3 h-3 rounded-full" style="background:#F59E0B"></span>
+                                    <span>Robbery (Score: 3)</span>
+                                </div>
+                                <div class="flex items-center space-x-3 mt-2">
+                                    <span class="w-3 h-3 rounded-full" style="background:#EF4444"></span>
+                                    <span>Kidnapping (Score: 5)</span>
+                                </div>
+                            </div>
+                        </div>
 
                         <!-- Instructions -->
                         <div class="mt-4 bg-white/5 backdrop-blur-sm rounded-2xl p-4 border border-white/10">
@@ -144,7 +166,7 @@
                             <div class="text-sm text-purple-200 space-y-1">
                                 <p>• <strong>Route Mode:</strong> Click on the map to add route points</p>
                                 <p>• <strong>Crime Mode:</strong> Click on the map to mark crime points (select crime type first)</p>
-                                <p>• <strong>Colors:</strong> Green = Safe, Yellow = Moderate, Red = Dangerous</p>
+                                <p>• <strong>Colors:</strong> Blue = Route, Green = Theft, Orange = Robbery, Red = Kidnapping</p>
                             </div>
                         </div>
                     </div>
@@ -153,17 +175,12 @@
         </form>
     </div>
 </div>
-
-<!-- Leaflet CSS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
 @endsection
 
-@section('scripts')
-<!-- Leaflet JS -->
+@push('scripts')
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
 <script>
+document.addEventListener('DOMContentLoaded', function() {
     // Initialize map
     const map = L.map('map').setView([23.8103, 90.4125], 12);
 
@@ -230,11 +247,11 @@
         currentMode = mode;
         
         if (mode === 'route') {
-            routeModeBtn.className = 'px-4 py-2 bg-blue-500/30 text-blue-300 rounded-xl';
-            crimeModeBtn.className = 'px-4 py-2 bg-orange-500/20 hover:bg-orange-500/30 text-orange-300 rounded-xl';
+            routeModeBtn.className = 'px-4 py-2 bg-blue-500/30 text-blue-300 rounded-xl transition-all duration-300';
+            crimeModeBtn.className = 'px-4 py-2 bg-orange-500/20 hover:bg-orange-500/30 text-orange-300 rounded-xl transition-all duration-300';
         } else {
-            routeModeBtn.className = 'px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 rounded-xl';
-            crimeModeBtn.className = 'px-4 py-2 bg-orange-500/30 text-orange-300 rounded-xl';
+            routeModeBtn.className = 'px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 rounded-xl transition-all duration-300';
+            crimeModeBtn.className = 'px-4 py-2 bg-orange-500/30 text-orange-300 rounded-xl transition-all duration-300';
         }
     }
 
@@ -277,8 +294,15 @@
         
         crimePoints.push(crimePoint);
         
-        // Add marker
-        const color = score >= 5 ? '#ef4444' : score >= 3 ? '#f59e0b' : '#10b981';
+        // Add marker with color based on crime type
+        let color;
+        switch(crimeType) {
+            case 'theft': color = '#10b981'; break;
+            case 'robbery': color = '#f59e0b'; break;
+            case 'kidnapping': color = '#ef4444'; break;
+            default: color = '#6b7280';
+        }
+        
         const marker = L.circleMarker([lat, lng], {
             radius: 8,
             fillColor: color,
@@ -331,8 +355,22 @@
         }
     });
 
+    // Form submission
+    document.getElementById('routeForm').addEventListener('submit', function(e) {
+        if (routePoints.length === 0) {
+            e.preventDefault();
+            alert('Please add at least one route point!');
+            return false;
+        }
+        
+        // Ensure coordinates are set
+        const allPoints = [...routePoints, ...crimePoints];
+        document.getElementById('coordinates_json').value = JSON.stringify(allPoints);
+    });
+
     // Initialize
     setMode('route');
     updateUI();
+});
 </script>
-@endsection
+@endpush

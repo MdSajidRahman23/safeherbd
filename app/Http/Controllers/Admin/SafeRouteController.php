@@ -15,7 +15,8 @@ class SafeRouteController extends Controller
     public function index()
     {
         $safeRoutes = SafeRoute::with('creator')->latest()->get();
-        return view('admin.safe-routes.index', compact('safeRoutes'));
+
+        return view('admin.safe-routes', compact('safeRoutes'));
     }
 
     /**
@@ -31,18 +32,19 @@ class SafeRouteController extends Controller
      */
     public function store(Request $request)
     {
+
         $request->validate([
             'route_name' => 'required|string|max:255',
-            'coordinates_json' => 'required|string',
+            'coordinates' => 'required|string',
         ]);
 
         // Parse coordinates and calculate total crime score
-        $coordinates = json_decode($request->coordinates_json, true);
+        $coordinates = json_decode($request->coordinates, true);
         $totalScore = $this->calculateCrimeScore($coordinates);
 
         SafeRoute::create([
             'route_name' => $request->route_name,
-            'coordinates_json' => $request->coordinates_json,
+            'coordinates' => $coordinates,
             'total_score' => $totalScore,
             'created_by' => Auth::id(),
         ]);
@@ -64,18 +66,19 @@ class SafeRouteController extends Controller
      */
     public function update(Request $request, SafeRoute $safeRoute)
     {
+
         $request->validate([
             'route_name' => 'required|string|max:255',
-            'coordinates_json' => 'required|string',
+            'coordinates' => 'required|string',
         ]);
 
         // Parse coordinates and calculate total crime score
-        $coordinates = json_decode($request->coordinates_json, true);
+        $coordinates = json_decode($request->coordinates, true);
         $totalScore = $this->calculateCrimeScore($coordinates);
 
         $safeRoute->update([
             'route_name' => $request->route_name,
-            'coordinates_json' => $request->coordinates_json,
+            'coordinates' => $coordinates,
             'total_score' => $totalScore,
         ]);
 

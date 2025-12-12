@@ -90,7 +90,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Safe Routes Management (Alternative AdminController method)
     Route::prefix('safe-routes')->name('safe-routes.')->group(function () {
-        Route::get('/', [AdminController::class, 'safeRoutesIndex'])->name('index');
+
+        Route::get('/', [SafeRouteController::class, 'index'])->name('index');
         Route::get('/create', [SafeRouteController::class, 'create'])->name('create');
         Route::post('/', [SafeRouteController::class, 'store'])->name('store');
         Route::get('/{safeRoute}/edit', [SafeRouteController::class, 'edit'])->name('edit');

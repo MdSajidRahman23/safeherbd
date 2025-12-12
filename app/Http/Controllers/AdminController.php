@@ -63,12 +63,8 @@ class AdminController extends Controller
         return back()->with('success', 'User deleted successfully.');
     }
 
-    // Safe Routes Management
-    public function safeRoutesIndex()
-    {
-        $safeRoutes = SafeRoute::with('creator')->latest()->get();
-        return view('admin.safe-routes', compact('safeRoutes'));
-    }
+
+
 
     // Reports Management
     public function reportsIndex()
