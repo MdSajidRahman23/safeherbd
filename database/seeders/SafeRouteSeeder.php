@@ -21,7 +21,7 @@ class SafeRouteSeeder extends Seeder
         $routes = [
             [
                 'route_name' => 'Gulshan to Dhanmondi Safe Route',
-                'coordinates_json' => [
+                'coordinates' => [
                     [23.7925, 90.4078], // Gulshan
                     [23.7461, 90.3742], // Dhanmondi
                 ],
@@ -33,7 +33,7 @@ class SafeRouteSeeder extends Seeder
             ],
             [
                 'route_name' => 'Uttara to Mirpur Route',
-                'coordinates_json' => [
+                'coordinates' => [
                     [23.8759, 90.3794], // Uttara
                     [23.8223, 90.3654], // Mirpur
                 ],
@@ -45,7 +45,7 @@ class SafeRouteSeeder extends Seeder
             ],
             [
                 'route_name' => 'Mohammadpur to Banani',
-                'coordinates_json' => [
+                'coordinates' => [
                     [23.7574, 90.3609], // Mohammadpur
                     [23.7937, 90.4034], // Banani
                 ],
@@ -57,7 +57,7 @@ class SafeRouteSeeder extends Seeder
             ],
             [
                 'route_name' => 'Old Dhaka to New Market',
-                'coordinates_json' => [
+                'coordinates' => [
                     [23.7104, 90.4074], // Old Dhaka
                     [23.7324, 90.3847], // New Market
                 ],
@@ -69,7 +69,7 @@ class SafeRouteSeeder extends Seeder
             ],
             [
                 'route_name' => 'Bashundhara to Kuril',
-                'coordinates_json' => [
+                'coordinates' => [
                     [23.8197, 90.4522], // Bashundhara
                     [23.8293, 90.4203], // Kuril
                 ],
@@ -81,7 +81,7 @@ class SafeRouteSeeder extends Seeder
             ],
             [
                 'route_name' => 'Wari to Sadarghat',
-                'coordinates_json' => [
+                'coordinates' => [
                     [23.7181, 90.4181], // Wari
                     [23.7047, 90.4203], // Sadarghat
                 ],

@@ -14,7 +14,7 @@ return new class extends Migration
     Schema::create('safe_routes', function (Blueprint $table) {
         $table->id();
         $table->string('route_name');
-        $table->longText('coordinates_json');
+        $table->longText('coordinates');
 
         $table->integer('total_score')->default(0);
         $table->foreignId('created_by')->constrained('users')->onDelete('cascade');

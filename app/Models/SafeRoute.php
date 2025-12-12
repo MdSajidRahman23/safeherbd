@@ -12,7 +12,7 @@ class SafeRoute extends Model
 
     protected $fillable = [
         'route_name',
-        'coordinates_json',
+        'coordinates',
         'total_score',
         'theft_count',
         'robbery_count',
@@ -22,7 +22,7 @@ class SafeRoute extends Model
     ];
 
     protected $casts = [
-        'coordinates_json' => 'array',
+        'coordinates' => 'array',
     ];
 
     public function creator()
