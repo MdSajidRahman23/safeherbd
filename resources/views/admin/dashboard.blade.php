@@ -1,3 +1,4 @@
+
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
@@ -25,13 +26,14 @@
                 </div>
             </div>
 
+
             <!-- SOS Alerts History -->
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
                 <h3 class="text-lg font-bold mb-4 dark:text-gray-200">SOS Alerts History</h3>
                 <div class="overflow-x-auto">
-                    @if(isset($alerts) && $alerts->count() > 0)
+                    @if(isset($alerts) && count($alerts) > 0)
                         <table class="w-full text-sm">
-                            <thead class="bg-gray-50 dark:bg-gray-700">
+
                                 <tr>
                                     <th class="py-3 px-4 text-left">ID</th>
                                     <th class="py-3 px-4 text-left">User</th>
@@ -46,7 +48,7 @@
                                 @foreach ($alerts as $alert)
                                     <tr id="alert-{{ $alert->id }}" class="hover:bg-gray-50 dark:hover:bg-gray-700">
                                         <td class="py-3 px-4">{{ $alert->id }}</td>
-                                        <td class="py-3 px-4">{{ $alert->user->name ?? 'N/A' }}</td>
+                                        <td class="py-3 px-4">{{ $alert->user_name ?? 'N/A' }}</td>
                                         <td class="py-3 px-4">{{ number_format($alert->latitude, 5) }}, {{ number_format($alert->longitude, 5) }}</td>
                                         <td class="py-3 px-4 truncate">{{ $alert->message ?? '-' }}</td>
                                         <td class="py-3 px-4">
@@ -55,7 +57,7 @@
                                                 {{ ucfirst($alert->status) }}
                                             </span>
                                         </td>
-                                        <td class="py-3 px-4">{{ $alert->created_at->format('Y-m-d H:i') }}</td>
+                                        <td class="py-3 px-4">{{ \Carbon\Carbon::parse($alert->created_at)->format('Y-m-d H:i') }}</td>
                                         <td class="py-3 px-4">
                                             @if($alert->status === 'pending')
                                                 <button onclick="updateAlertStatus({{ $alert->id }}, 'acknowledged')" class="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded text-xs">
@@ -72,7 +74,6 @@
                     @endif
                 </div>
             </div>
-
             <!-- Quick Actions -->
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
                 <h3 class="text-lg font-bold mb-4 dark:text-gray-200">Quick Actions</h3>

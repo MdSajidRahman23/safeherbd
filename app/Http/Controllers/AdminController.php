@@ -9,16 +9,23 @@ use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
+
     // 1. Dashboard Page (Stats)
     public function index()
     {
         $totalUsers = User::where('role', 'user')->count();
         $totalRoutes = SafeRoute::count();
-        
-        
         $totalSos = DB::table('sos_alerts')->count(); 
+        
+        // Get recent SOS alerts for the dashboard
+        $alerts = DB::table('sos_alerts')
+            ->join('users', 'sos_alerts.user_id', '=', 'users.id')
+            ->select('sos_alerts.*', 'users.name as user_name')
+            ->orderBy('sos_alerts.created_at', 'desc')
+            ->limit(10)
+            ->get();
 
-        return view('admin.dashboard', compact('totalUsers', 'totalRoutes', 'totalSos'));
+        return view('admin.dashboard', compact('totalUsers', 'totalRoutes', 'totalSos', 'alerts'));
     }
 
     
