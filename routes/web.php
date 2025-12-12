@@ -15,7 +15,7 @@ Route::get('/', function () {
 });
 
 Route::get('/test-dashboard', function () {
-    return '<h1>Test Dashboard</h1><p>If you can see this, the basic routing works.</p>';
+    return '<!DOCTYPE html><html><head><title>Test</title></head><body><h1>Test Dashboard</h1><p>Basic HTML works.</p></body></html>';
 })->name('test-dashboard');
 
 Route::get('/dashboard', function () {
